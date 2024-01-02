@@ -6,6 +6,7 @@ const { errorHandler } = require("./utils/error");
 
 app.use(express.json());
 
+
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
 });
@@ -72,6 +73,23 @@ app.get('/todos/:id', async (req, res, next) => {
     }
 });
 
+const basicAuth = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Testing")) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const base64Credentials = authHeader.split(" ")[1];
+    const credentials = Buffer.from(base64Credentials, "base64").toString("utf-8");
+
+    if (credentials === "your_username:your_password") {
+        next();
+    } else {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+};
+
 app.post('/todo', async (req, res, next) => {
     try {
         if (req.body.title.length < 3 || req.body.description.length < 10) {
@@ -90,3 +108,5 @@ mongoose.connect("mongodb+srv://yashdhoke1:yax50120@yashdhoke.z5ipbv5.mongodb.ne
 }).catch(() => {
     console.log("Error while connecting to the database");
 });
+
+app.use(basicAuth);
