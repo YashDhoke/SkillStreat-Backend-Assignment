@@ -20,6 +20,16 @@ app.get('/todos' , async(req , res) => {
     }catch(error){
         res.status(500).json({message : error.message}) ; 
     }
+}); 
+
+app.get('/todos/:id' , async(req , res) => {
+    try{
+        const {id} = req.params ; 
+        const todo = await Todo.findById(id) ; 
+        res.status(200).json(todo) ; 
+    }catch(error){
+        res.status(500).json({message : error.message}) ; 
+    }
 })
 
 app.post('/todo' , async(req , res) => {
@@ -30,7 +40,7 @@ app.post('/todo' , async(req , res) => {
         console.log(error.message) ;
         res.status(500).json({message : error.message}) ; 
     }
-})
+}); 
 
 mongoose.connect("mongodb+srv://yashdhoke1:yax50120@yashdhoke.z5ipbv5.mongodb.net/SkillStreatBackendAssignment").then(() => {
     console.log("Connected to database") ; 
