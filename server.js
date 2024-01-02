@@ -35,6 +35,21 @@ app.put('/todos/:id', async(req, res) => {
     } catch (error) {
         res.status(500).json({message: error.message})
     }
+}); 
+
+
+app.delete('/todos/:id', async(req, res) =>{
+    try {
+        const {id} = req.params;
+        const todo = await Todo.findByIdAndDelete(id);
+        if(!todo){
+            return res.status(404).json({message: `cannot find any note with ID ${id}`})
+        }
+        res.status(200).json(todo);
+        
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
 })
 
 app.get('/todos/:id' , async(req , res) => {
