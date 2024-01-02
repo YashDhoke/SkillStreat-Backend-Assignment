@@ -22,6 +22,21 @@ app.get('/todos' , async(req , res) => {
     }
 }); 
 
+app.put('/todos/:id', async(req, res) => {
+    try {
+        const {id} = req.params;
+        const todo = await Todo.findByIdAndUpdate(id, req.body);
+        if(!todo){
+            return res.status(404).json({message: `cannot find any note with ID ${id}`})
+        }
+        const updatedTodo = await Todo.findById(id);
+        res.status(200).json(updatedTodo);
+        
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+})
+
 app.get('/todos/:id' , async(req , res) => {
     try{
         const {id} = req.params ; 
